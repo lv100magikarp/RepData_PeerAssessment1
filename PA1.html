@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
-<title>Assignment 1</title>
+<title>Peer Assessment 1</title>
 
 <script type="text/javascript">
 window.onload = function() {
@@ -201,7 +201,7 @@ hr {
 </head>
 
 <body>
-<h1>Assignment 1</h1>
+<h1>Peer Assessment 1</h1>
 
 <p>In this assignment, we conduct a simple analysis  on the data of the number of 
 steps taken per 5-minute interval by an anonymous person. </p>
@@ -211,8 +211,7 @@ steps taken per 5-minute interval by an anonymous person. </p>
 <pre><code class="r">data &lt;- read.csv(&#39;activity.csv&#39;)
 </code></pre>
 
-<p>##Total Steps per Day
-We take a brief look at the data.</p>
+<p>We take a brief look at the data.</p>
 
 <pre><code class="r">sums &lt;- tapply(data$steps,data$date,sum,na.rm=T)
     hist(sums,main=&#39;Histogram of Mean Number of Steps per Day&#39;,xlab=&#39;Steps&#39;)
@@ -227,8 +226,7 @@ med &lt;- median(sums)
 <p>The mean and median of the total number of steps taken per day are 9354.2295082 and
 10395 respectively.</p>
 
-<p>##Daily Walking Pattern
-It may be interesting looking at the person&#39;s daily walking pattern.</p>
+<p>It may be interesting looking at the person&#39;s daily walking pattern.</p>
 
 <pre><code class="r">avg.per.interval &lt;- tapply(data$steps,data$interval,mean,na.rm=T)
 intervals &lt;- unique(data$interval)
@@ -250,8 +248,7 @@ max.int &lt;- strftime(strptime(max.int,format=&#39;%H%M&#39;),format=&#39;%H:%M
 <p>The time with the most steps taken is precisely the 5-minute interval 
 staring at 08:35.</p>
 
-<p>##Impute Missing Data
-As we can see, there are quite a few missing values in the data, however, which 
+<p>As we can see, there are quite a few missing values in the data, however, which 
 might have made the previous analyses biased.</p>
 
 <pre><code class="r">head(data)
@@ -299,8 +296,7 @@ result is expected, since before imputing the missing values, the missing values
 were treated similarly to 0 when calculating the average total number of steps
 per day.</p>
 
-<p>##Comparison Between Weekdays and Weekends
-We may also be curious about the differences of walking patterns between
+<p>We may also be curious about the differences of walking patterns between
 weekdays and weekends. Below is a graphical comparison.</p>
 
 <pre><code class="r">#create factore variable with levels weekday and weekend
