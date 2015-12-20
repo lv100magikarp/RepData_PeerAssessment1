@@ -11,7 +11,7 @@ First, we load the dataset.
 data <- read.csv('activity.csv')
 ```
 
-###Total Steps per Day
+##Total Steps per Day
 We take a brief look at the data.
 
 
@@ -30,7 +30,7 @@ med <- median(sums)
 The mean and median of the total number of steps taken per day are 9354.2295082 and
 10395 respectively.
 
-###Daily Walking Pattern
+##Daily Walking Pattern
 It may be interesting looking at the person's daily walking pattern.
 
 
@@ -57,7 +57,7 @@ max.int <- strftime(strptime(max.int,format='%H%M'),format='%H:%M')
 The time with the most steps taken is precisely the 5-minute interval 
 staring at 08:35.
 
-###Impute Missing Data
+##Impute Missing Data
 As we can see, there are quite a few missing values in the data, however, which 
 might have made the previous analyses biased.
 
@@ -113,7 +113,7 @@ result is expected, since before imputing the missing values, the missing values
 were treated similarly to 0 when calculating the average total number of steps
 per day.
 
-###Comparison Between Weekdays and Weekends
+##Comparison Between Weekdays and Weekends
 We may also be curious about the differences of walking patterns between
 weekdays and weekends. Below is a graphical comparison.
 
