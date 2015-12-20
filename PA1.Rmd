@@ -1,0 +1,117 @@
+Assignment 1
+============
+
+In this assignment, we conduct a simple analysis  on the data of the number of 
+steps taken per 5-minute interval by an anonymous person. 
+
+First, we load the dataset.
+
+```{r}
+data <- read.csv('activity.csv')
+```
+
+##Total Steps per Day
+We take a brief look at the data.
+
+```{r}
+sums <- tapply(data$steps,data$date,sum,na.rm=T)
+    hist(sums,main='Histogram of Mean Number of Steps per Day',xlab='Steps')
+
+mean <- mean(sums)
+med <- median(sums)
+```
+
+The mean and median of the total number of steps taken per day are `r mean` and
+`r med` respectively.
+
+##Daily Walking Pattern
+It may be interesting looking at the person's daily walking pattern.
+
+```{r}
+avg.per.interval <- tapply(data$steps,data$interval,mean,na.rm=T)
+intervals <- unique(data$interval)
+
+plot(avg.per.interval~intervals, type='l',ylab='Steps', xlab='Time interval',
+     main='Average Steps at Each Time Interval Across Days')
+```
+
+We can see that the person is most active at around 8am to 9am, which is most
+likely because of commuting to work/school.
+
+```{r}
+maximum <- intervals[which(avg.per.interval==max(avg.per.interval))]
+max.int <- formatC(maximum,width=4,flag='0')
+max.int <- strftime(strptime(max.int,format='%H%M'),format='%H:%M')
+```
+
+The time with the most steps taken is precisely the 5-minute interval 
+staring at `r max.int`.
+
+##Impute Missing Data
+As we can see, there are quite a few missing values in the data, however, which 
+might have made the previous analyses biased.
+
+```{r}
+head(data)
+
+na <- unique(c(which(is.na(data$step)),which(is.na(data$interval)),
+               which(is.na(data$date))))
+no.na <- length(na)
+```
+
+There are `r no.na` rows with missing values, which is not a negligible number.
+
+Therefore, we impute the missing values and see what happens. A reasonable way 
+to do so would be to use the average number of steps for each interval as a 
+substitute.
+
+```{r}
+#impute data
+simulated <- rep(avg.per.interval,length.out=length(data$steps))
+    data[na,'steps'] <- simulated[na]
+
+#see how the histogram, mean and median have changed
+sums <- tapply(data$steps,data$date,sum,na.rm=T)
+hist(sums,main='Histogram of Mean Number of Steps per Day',xlab='Steps')
+
+mean2 <- mean(sums)
+med2 <- median(sums)
+```
+
+We observe that some weights have shifted to higher numbers of steps, meaning
+that the average number of steps taken per day has in general increased. This is
+also reflected in the increased mean (`r mean2`) and median (`r med2`). This
+result is expected, since before imputing the missing values, the missing values
+were treated similarly to 0 when calculating the average total number of steps
+per day.
+
+##Comparison Between Weekdays and Weekends
+We may also be curious about the differences of walking patterns between
+weekdays and weekends. Below is a graphical comparison.
+
+```{r}
+#create factore variable with levels weekday and weekend
+weekday <- weekdays(strptime(data$date,format='%Y-%m-%d'))
+
+days <- rep('weekday',length.out=length(data$date))
+days[weekday == 'Sunday'|weekday =='Saturday'] <- 'weekend'
+days <- factor(days,levels=c('weekday','weekend'))
+
+#Merge the factor variable into the data
+library(dplyr)
+data <- mutate(data,w.day.or.w.end=days)
+
+#Calculate the average for each interval for weekdays and weekends separately
+data2 <- group_by(select(data,-date),w.day.or.w.end,interval)
+avgSteps <- summarise(data2,avg=mean(steps))
+
+#Plot graph
+library(lattice)
+xyplot(avg~interval|w.day.or.w.end,data=avgSteps,type='l',layout=c(1,2),
+       ylab='Average Number of Steps',xlab='Time Interval',
+       main='Comparison of Average Number of Steps')
+```
+
+We notice that the person's walking activity is spread more evenly across the 
+day during weekends, and more centered around the standard commuting time 
+(8am - 9am) during weekdays.
